@@ -1,0 +1,38 @@
+{
+  "e91c8272-abac-4ef0-9da0-7b107f2cb799": {
+    "id": "e91c8272-abac-4ef0-9da0-7b107f2cb799",
+    "filename": "test_image.jpg",
+    "original_filename": "test_image.jpg",
+    "path": "uploads/e91c8272-abac-4ef0-9da0-7b107f2cb799.jpg",
+    "url": "/uploads/e91c8272-abac-4ef0-9da0-7b107f2cb799.jpg",
+    "size": 21455,
+    "width": 256,
+    "height": 256,
+    "uploaded_at": "2025-12-27T12:55:24.419982",
+    "file_format": ".jpg"
+  },
+  "8d54c67d-e522-4af0-af86-10b5e0dd1ab1": {
+    "id": "8d54c67d-e522-4af0-af86-10b5e0dd1ab1",
+    "filename": "test_svd_real.jpg",
+    "original_filename": "test_svd_real.jpg",
+    "path": "uploads/8d54c67d-e522-4af0-af86-10b5e0dd1ab1.jpg",
+    "url": "/uploads/8d54c67d-e522-4af0-af86-10b5e0dd1ab1.jpg",
+    "size": 21460,
+    "width": 256,
+    "height": 256,
+    "uploaded_at": "2025-12-27T12:59:24.764440",
+    "file_format": ".jpg"
+  },
+  "de7e3251-0ede-45b9-b8b1-f29588c9ace4": {
+    "id": "de7e3251-0ede-45b9-b8b1-f29588c9ace4",
+    "filename": "test_svd_real.jpg",
+    "original_filename": "test_svd_real.jpg",
+    "path": "uploads/de7e3251-0ede-45b9-b8b1-f29588c9ace4.jpg",
+    "url": "/uploads/de7e3251-0ede-45b9-b8b1-f29588c9ace4.jpg",
+    "size": 21460,
+    "width": 256,
+    "height": 256,
+    "uploaded_at": "2025-12-27T16:37:51.019014",
+    "file_format": ".jpg"
+  }
+}
