@@ -29,3 +29,20 @@ Thumbs.db
 *.avif
 *.tex
 *.gif
+
+# Modelos PyTorch e arquivos grandes
+*.pth
+*.pt
+*.pkl
+*.h5
+*.hdf5
+
+# Diretórios de processamento
+backend/processed/
+backend/uploads/
+backend/temp/
+backend/logs/
+
+# Arquivos de imagem processados
+frontend/public/processed/
+frontend/public/uploads/
