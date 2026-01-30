@@ -8,10 +8,10 @@ import {
   GitCompare,
   FileImage,
   Home,
-  Zap,
+  Layers,
   FileText,
-  Sparkles,
   ChevronRight,
+  Hexagon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -109,34 +109,33 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <Sidebar className="border-r border-border/50">
-      <SidebarHeader className="border-b border-border/50 p-4">
-        <Link href="/" className="flex items-center gap-3 group">
+    <Sidebar className="border-r border-border bg-sidebar">
+      <SidebarHeader className="border-b border-border p-5">
+        <Link href="/" className="flex items-center gap-3.5 group">
           <motion.div 
             className="relative"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-primary via-primary/80 to-primary/60 opacity-75 blur-sm group-hover:opacity-100 transition-opacity" />
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg">
-              <Zap className="h-5 w-5 text-primary-foreground" />
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-foreground transition-all duration-300 group-hover:rounded-2xl">
+              <Hexagon className="h-5 w-5 text-background" strokeWidth={2} />
             </div>
           </motion.div>
           <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+            <span className="text-base font-semibold tracking-tight text-foreground">
               ImageStudio
             </span>
-            <span className="text-[10px] text-muted-foreground font-medium tracking-wide uppercase">
-              Álgebra Linear & IA
+            <span className="text-[10px] text-muted-foreground font-medium tracking-widest uppercase">
+              Linear Algebra
             </span>
           </div>
         </Link>
       </SidebarHeader>
 
-      <SidebarContent className="px-2 py-4">
+      <SidebarContent className="px-3 py-6">
         {navigation.map((group, groupIndex) => (
-          <SidebarGroup key={group.title} className="mb-2">
-            <SidebarGroupLabel className="px-3 text-[10px] font-semibold tracking-wider uppercase text-muted-foreground/70 mb-2">
+          <SidebarGroup key={group.title} className="mb-6">
+            <SidebarGroupLabel className="px-3 text-[10px] font-semibold tracking-widest uppercase text-muted-foreground/60 mb-3">
               {group.title}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -156,29 +155,20 @@ export function AppSidebar() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: (groupIndex * 0.1) + (itemIndex * 0.05) }}
                             className={cn(
-                              "relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-200",
+                              "relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-300",
                               isActive 
-                                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
-                                : "hover:bg-muted/80 text-foreground"
+                                ? "bg-foreground text-background" 
+                                : "hover:bg-accent text-foreground"
                             )}
                           >
-                            {/* Active indicator */}
-                            {isActive && (
-                              <motion.div
-                                layoutId="activeIndicator"
-                                className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-primary-foreground"
-                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                              />
-                            )}
-                            
                             {/* Icon */}
                             <div className={cn(
-                              "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200",
+                              "flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-300",
                               isActive 
-                                ? "bg-primary-foreground/20" 
-                                : "bg-muted group-hover:bg-primary/10 group-hover:text-primary"
+                                ? "bg-background/10" 
+                                : "bg-muted group-hover:bg-foreground/5"
                             )}>
-                              <item.icon className="h-4 w-4" />
+                              <item.icon className="h-4 w-4" strokeWidth={1.5} />
                             </div>
                             
                             {/* Text */}
@@ -190,8 +180,8 @@ export function AppSidebar() {
                                 <span className={cn(
                                   "text-[10px] block truncate transition-colors",
                                   isActive 
-                                    ? "text-primary-foreground/70" 
-                                    : "text-muted-foreground group-hover:text-foreground/60"
+                                    ? "text-background/60" 
+                                    : "text-muted-foreground group-hover:text-foreground/50"
                                 )}>
                                   {item.description}
                                 </span>
@@ -203,10 +193,10 @@ export function AppSidebar() {
                               <Badge 
                                 variant="secondary" 
                                 className={cn(
-                                  "text-[9px] px-1.5 py-0.5 font-medium",
+                                  "text-[9px] px-1.5 py-0.5 font-medium rounded-md",
                                   isActive 
-                                    ? "bg-primary-foreground/20 text-primary-foreground border-0" 
-                                    : "bg-primary/10 text-primary border-0"
+                                    ? "bg-background/20 text-background border-0" 
+                                    : "bg-foreground text-background border-0"
                                 )}
                               >
                                 {item.badge}
@@ -215,9 +205,9 @@ export function AppSidebar() {
                             
                             {/* Arrow */}
                             <ChevronRight className={cn(
-                              "h-3.5 w-3.5 opacity-0 -translate-x-2 transition-all duration-200",
-                              "group-hover:opacity-100 group-hover:translate-x-0",
-                              isActive && "opacity-100 translate-x-0"
+                              "h-3.5 w-3.5 opacity-0 -translate-x-2 transition-all duration-300",
+                              "group-hover:opacity-50 group-hover:translate-x-0",
+                              isActive && "opacity-60 translate-x-0"
                             )} />
                           </motion.div>
                         </Link>
@@ -231,20 +221,19 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-border/50 p-4">
+      <SidebarFooter className="border-t border-border p-4">
         {/* Pro Banner */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="relative overflow-hidden rounded-xl p-4 mb-3"
+          className="relative overflow-hidden rounded-xl p-4 mb-4 border border-border bg-accent/50"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent" />
-          <div className="absolute inset-0 noise opacity-30" />
+          <div className="absolute inset-0 dot-pattern opacity-30" />
           <div className="relative">
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-xs font-semibold text-primary">Upgrade Pro</span>
+              <Layers className="h-4 w-4 text-foreground" strokeWidth={1.5} />
+              <span className="text-xs font-semibold text-foreground">Upgrade Pro</span>
             </div>
             <p className="text-[10px] text-muted-foreground leading-relaxed mb-3">
               Desbloqueie algoritmos avançados e processamento em lote
@@ -252,7 +241,7 @@ export function AppSidebar() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-2 px-3 text-xs font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="w-full py-2 px-3 text-xs font-medium rounded-lg bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
             >
               Conhecer Planos
             </motion.button>
@@ -268,13 +257,13 @@ export function AppSidebar() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300",
                   isActive 
-                    ? "bg-muted text-foreground" 
-                    : "hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+                    ? "bg-accent text-foreground" 
+                    : "hover:bg-accent text-muted-foreground hover:text-foreground"
                 )}
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className="h-4 w-4" strokeWidth={1.5} />
                 <span className="text-sm font-medium">{item.title}</span>
               </motion.div>
             </Link>
@@ -282,9 +271,9 @@ export function AppSidebar() {
         })}
 
         {/* Version */}
-        <div className="mt-3 px-3">
-          <p className="text-[10px] text-muted-foreground/50">
-            ImageStudio v2.0.0
+        <div className="mt-4 px-3 pt-4 border-t border-border">
+          <p className="text-[10px] text-muted-foreground/40 font-mono">
+            v2.0.0
           </p>
         </div>
       </SidebarFooter>

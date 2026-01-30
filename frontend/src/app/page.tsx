@@ -2,7 +2,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import {
   Upload,
@@ -12,14 +11,13 @@ import {
   FileImage,
   TrendingUp,
   Clock,
-  Zap,
-  ArrowRight,
+  ArrowUpRight,
   CheckCircle,
   XCircle,
-  Sparkles,
   Activity,
   Layers,
-  ArrowUpRight,
+  Box,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
@@ -31,27 +29,27 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.08,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
       type: "spring" as const,
       stiffness: 100,
-      damping: 15,
+      damping: 20,
     },
   },
 };
 
 export default function Dashboard() {
   const { data: algorithms, isLoading: algorithmsLoading, error: algorithmsError } = useAlgorithms();
-  const { data: stats, isLoading: statsLoading, error: statsError } = useProcessingStats();
+  const { data: stats, error: statsError } = useProcessingStats();
 
   const apiConnected = !algorithmsError && !statsError && algorithms !== undefined;
   const algorithmsCount = algorithms ? Object.keys(algorithms).length : 0;
@@ -63,26 +61,20 @@ export default function Dashboard() {
       change: "+12%",
       trend: "up",
       icon: FileImage,
-      gradient: "from-blue-500 to-cyan-500",
-      bgGradient: "from-blue-500/10 to-cyan-500/5",
     },
     {
-      title: "Algoritmos Disponíveis",
+      title: "Algoritmos Ativos",
       value: algorithmsCount.toString(),
-      change: `${algorithmsCount} ativos`,
+      change: `${algorithmsCount} disponíveis`,
       trend: "neutral",
       icon: Cpu,
-      gradient: "from-violet-500 to-purple-500",
-      bgGradient: "from-violet-500/10 to-purple-500/5",
     },
     {
-      title: "Jobs de Processamento",
+      title: "Jobs em Execução",
       value: stats?.total_jobs?.toString() || "0",
       change: "+8%",
       trend: "up",
       icon: Layers,
-      gradient: "from-amber-500 to-orange-500",
-      bgGradient: "from-amber-500/10 to-orange-500/5",
     },
     {
       title: "Status da API",
@@ -90,8 +82,6 @@ export default function Dashboard() {
       change: apiConnected ? "Conectado" : "Desconectado",
       trend: apiConnected ? "up" : "down",
       icon: Activity,
-      gradient: apiConnected ? "from-emerald-500 to-green-500" : "from-red-500 to-rose-500",
-      bgGradient: apiConnected ? "from-emerald-500/10 to-green-500/5" : "from-red-500/10 to-rose-500/5",
     },
   ];
 
@@ -100,78 +90,64 @@ export default function Dashboard() {
       type: "process",
       title: "Compressão SVD aplicada",
       description: "brain.jpg processada com k=50",
-      time: "2 minutos atrás",
+      time: "2 min",
       algorithm: "SVD",
-      status: "success",
     },
     {
       type: "compare",
       title: "Comparação de algoritmos",
-      description: "SVD vs Autoencoder vs Compressed Sensing",
-      time: "15 minutos atrás",
+      description: "SVD vs Autoencoder vs CS",
+      time: "15 min",
       algorithms: ["SVD", "AE", "CS"],
-      status: "success",
     },
     {
       type: "upload",
       title: "Nova imagem carregada",
-      description: "chest_xray_001.png (512x512)",
-      time: "1 hora atrás",
-      status: "success",
+      description: "chest_xray_001.png (512×512)",
+      time: "1h",
     },
   ];
 
   const quickActions = [
     {
-      title: "Upload de Imagem",
-      description: "Carregue novas imagens para processamento",
+      title: "Upload",
+      description: "Carregar novas imagens",
       icon: Upload,
       href: "/upload",
-      gradient: "from-blue-500 to-cyan-500",
-      hoverGradient: "group-hover:from-blue-600 group-hover:to-cyan-600",
     },
     {
-      title: "Processar Imagem",
-      description: "Aplique algoritmos de compressão",
+      title: "Processar",
+      description: "Aplicar algoritmos",
       icon: Cpu,
       href: "/process",
-      gradient: "from-violet-500 to-purple-500",
-      hoverGradient: "group-hover:from-violet-600 group-hover:to-purple-600",
     },
     {
-      title: "Comparar Algoritmos",
-      description: "Compare performance lado a lado",
+      title: "Comparar",
+      description: "Análise lado a lado",
       icon: GitCompare,
       href: "/compare",
-      gradient: "from-amber-500 to-orange-500",
-      hoverGradient: "group-hover:from-amber-600 group-hover:to-orange-600",
     },
     {
-      title: "Ver Resultados",
-      description: "Análise detalhada de métricas",
+      title: "Resultados",
+      description: "Ver métricas",
       icon: BarChart3,
       href: "/results",
-      gradient: "from-emerald-500 to-green-500",
-      hoverGradient: "group-hover:from-emerald-600 group-hover:to-green-600",
     },
   ];
 
   return (
     <motion.div 
-      className="flex-1 space-y-8 p-6 md:p-8"
+      className="flex-1 space-y-8 p-6 md:p-10"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-            <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
-              Dashboard
-            </span>
-          </h1>
-          <p className="text-muted-foreground mt-1">
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-1">
+          <p className="text-caption">Bem-vindo de volta</p>
+          <h1 className="text-display">Dashboard</h1>
+          <p className="text-muted-foreground max-w-md">
             Visão geral do seu processamento de imagens
           </p>
         </div>
@@ -179,83 +155,55 @@ export default function Dashboard() {
           <Badge 
             variant="secondary" 
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full",
-              "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-0"
+              "flex items-center gap-2 px-3 py-1.5 rounded-full border",
+              apiConnected 
+                ? "bg-transparent border-foreground/20 text-foreground" 
+                : "bg-transparent border-destructive/50 text-destructive"
             )}
           >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            <span className={cn(
+              "relative flex h-2 w-2",
+              apiConnected ? "text-foreground" : "text-destructive"
+            )}>
+              {apiConnected && (
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75" />
+              )}
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-current" />
             </span>
-            Sistema Online
-          </Badge>
-          <Badge
-            variant={algorithmsError || statsError ? "destructive" : "secondary"}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full border-0",
-              algorithmsError || statsError 
-                ? "bg-red-500/10 text-red-600 dark:text-red-400" 
-                : "bg-primary/10 text-primary"
-            )}
-          >
-            {algorithmsError || statsError ? (
-              <XCircle className="h-3.5 w-3.5" />
-            ) : (
-              <CheckCircle className="h-3.5 w-3.5" />
-            )}
-            API {algorithmsError || statsError ? "Offline" : "Conectada"}
+            {apiConnected ? "Sistema Online" : "Sistema Offline"}
           </Badge>
         </div>
       </motion.div>
 
       {/* Stats Grid */}
-      <motion.div variants={itemVariants} className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <motion.div variants={itemVariants} className="grid gap-4 md:gap-6 grid-cols-2 lg:grid-cols-4">
         {statsData.map((stat, index) => (
           <motion.div
             key={stat.title}
             variants={itemVariants}
-            whileHover={{ scale: 1.02, y: -4 }}
+            whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
           >
-            <Card className={cn(
-              "relative overflow-hidden border-0 shadow-lg",
-              "bg-gradient-to-br",
-              stat.bgGradient,
-              "backdrop-blur-sm"
-            )}>
-              <div className="absolute inset-0 bg-gradient-to-br from-background/50 to-background/80" />
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br opacity-20 rounded-full -translate-y-16 translate-x-16 blur-2xl"
-                style={{ background: `linear-gradient(to bottom right, var(--${stat.gradient.split(' ')[1].replace('to-', '')}))` }} 
-              />
-              <CardContent className="relative p-6">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      {stat.title}
-                    </p>
-                    <p className="text-3xl font-bold tracking-tight">
-                      {stat.value}
-                    </p>
-                    <div className="flex items-center gap-1.5 text-xs">
-                      {stat.trend === "up" && (
-                        <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
-                      )}
-                      <span className={cn(
-                        stat.trend === "up" && "text-emerald-600 dark:text-emerald-400",
-                        stat.trend === "down" && "text-red-600 dark:text-red-400",
-                        stat.trend === "neutral" && "text-muted-foreground"
-                      )}>
-                        {stat.change}
-                      </span>
+            <Card className="metric-card group">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-2.5 rounded-xl bg-accent border border-border group-hover:bg-foreground group-hover:border-foreground transition-all duration-300">
+                    <stat.icon className="h-5 w-5 text-foreground group-hover:text-background transition-colors" strokeWidth={1.5} />
+                  </div>
+                  {stat.trend === "up" && (
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <TrendingUp className="h-3 w-3" />
+                      {stat.change}
                     </div>
-                  </div>
-                  <div className={cn(
-                    "flex items-center justify-center w-12 h-12 rounded-xl",
-                    "bg-gradient-to-br shadow-lg",
-                    stat.gradient
-                  )}>
-                    <stat.icon className="h-6 w-6 text-white" />
-                  </div>
+                  )}
+                </div>
+                <div className="space-y-1">
+                  <p className="text-3xl font-semibold tracking-tight">
+                    {stat.value}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {stat.title}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -264,25 +212,23 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-7">
+      <div className="grid gap-6 lg:grid-cols-3">
         {/* Quick Actions */}
-        <motion.div variants={itemVariants} className="lg:col-span-4">
-          <Card className="border-border/50 shadow-lg bg-card/50 backdrop-blur-sm">
+        <motion.div variants={itemVariants} className="lg:col-span-2">
+          <Card className="border-border bg-card/50">
             <CardHeader className="pb-4">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                  <Zap className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <CardTitle>Ações Rápidas</CardTitle>
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl font-semibold">Ações Rápidas</CardTitle>
                   <CardDescription>
                     Comece a processar suas imagens
                   </CardDescription>
                 </div>
+                <Zap className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {quickActions.map((action, index) => (
                   <Link key={action.title} href={action.href}>
                     <motion.div
@@ -290,33 +236,27 @@ export default function Dashboard() {
                       whileTap={{ scale: 0.98 }}
                       className="group"
                     >
-                      <Card className={cn(
-                        "relative overflow-hidden border-border/50 transition-all duration-300",
-                        "hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5",
-                        "bg-gradient-to-br from-muted/30 to-muted/10"
+                      <div className={cn(
+                        "relative overflow-hidden rounded-xl border border-border p-5 transition-all duration-300",
+                        "hover:border-foreground/20 hover:bg-accent/50 bg-background"
                       )}>
-                        <CardContent className="p-4">
+                        <div className="flex items-start justify-between">
                           <div className="flex items-start gap-4">
-                            <div className={cn(
-                              "flex items-center justify-center w-12 h-12 rounded-xl",
-                              "bg-gradient-to-br shadow-lg transition-all duration-300",
-                              action.gradient,
-                              action.hoverGradient
-                            )}>
-                              <action.icon className="h-5 w-5 text-white" />
+                            <div className="p-2.5 rounded-xl bg-accent border border-border group-hover:bg-foreground group-hover:border-foreground transition-all duration-300">
+                              <action.icon className="h-5 w-5 text-foreground group-hover:text-background transition-colors" strokeWidth={1.5} />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
+                            <div className="space-y-1">
+                              <h3 className="font-medium text-foreground">
                                 {action.title}
                               </h3>
-                              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                              <p className="text-sm text-muted-foreground">
                                 {action.description}
                               </p>
                             </div>
-                            <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                           </div>
-                        </CardContent>
-                      </Card>
+                          <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                        </div>
+                      </div>
                     </motion.div>
                   </Link>
                 ))}
@@ -326,19 +266,17 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Recent Activity */}
-        <motion.div variants={itemVariants} className="lg:col-span-3">
-          <Card className="border-border/50 shadow-lg bg-card/50 backdrop-blur-sm h-full">
+        <motion.div variants={itemVariants}>
+          <Card className="border-border bg-card/50 h-full">
             <CardHeader className="pb-4">
-              <div className="flex items-center gap-2">
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10">
-                  <Clock className="h-4 w-4 text-amber-500" />
-                </div>
-                <div>
-                  <CardTitle>Atividade Recente</CardTitle>
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <CardTitle className="text-xl font-semibold">Atividade</CardTitle>
                   <CardDescription>
-                    Últimas ações realizadas
+                    Últimas ações
                   </CardDescription>
                 </div>
+                <Clock className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
               </div>
             </CardHeader>
             <CardContent>
@@ -346,37 +284,32 @@ export default function Dashboard() {
                 {recentActivities.map((activity, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 16 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 + 0.3 }}
-                    className="flex items-start gap-4 p-3 rounded-xl hover:bg-muted/50 transition-colors group"
+                    className="flex items-start gap-4 p-3 rounded-xl hover:bg-accent/50 transition-colors group"
                   >
-                    <div className={cn(
-                      "flex items-center justify-center w-10 h-10 rounded-xl shadow-md",
-                      activity.type === "process" && "bg-gradient-to-br from-emerald-500 to-green-500",
-                      activity.type === "compare" && "bg-gradient-to-br from-violet-500 to-purple-500",
-                      activity.type === "upload" && "bg-gradient-to-br from-blue-500 to-cyan-500"
-                    )}>
-                      {activity.type === "process" && <Cpu className="h-4 w-4 text-white" />}
-                      {activity.type === "compare" && <GitCompare className="h-4 w-4 text-white" />}
-                      {activity.type === "upload" && <Upload className="h-4 w-4 text-white" />}
+                    <div className="p-2 rounded-lg bg-accent border border-border">
+                      {activity.type === "process" && <Cpu className="h-4 w-4" strokeWidth={1.5} />}
+                      {activity.type === "compare" && <GitCompare className="h-4 w-4" strokeWidth={1.5} />}
+                      {activity.type === "upload" && <Upload className="h-4 w-4" strokeWidth={1.5} />}
                     </div>
                     <div className="flex-1 min-w-0 space-y-1">
-                      <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                      <p className="text-sm font-medium truncate">
                         {activity.title}
                       </p>
                       <p className="text-xs text-muted-foreground truncate">
                         {activity.description}
                       </p>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] text-muted-foreground/60">
                           {activity.time}
                         </span>
                         {activity.algorithms && activity.algorithms.map((alg) => (
                           <Badge 
                             key={alg} 
                             variant="secondary" 
-                            className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-0"
+                            className="text-[9px] px-1.5 py-0 bg-accent text-foreground border border-border rounded-md"
                           >
                             {alg}
                           </Badge>
@@ -384,7 +317,7 @@ export default function Dashboard() {
                         {activity.algorithm && (
                           <Badge 
                             variant="secondary" 
-                            className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-0"
+                            className="text-[9px] px-1.5 py-0 bg-accent text-foreground border border-border rounded-md"
                           >
                             {activity.algorithm}
                           </Badge>
@@ -401,61 +334,50 @@ export default function Dashboard() {
 
       {/* Algorithms Section */}
       <motion.div variants={itemVariants}>
-        <Card className="relative overflow-hidden border-border/50 shadow-lg bg-card/50 backdrop-blur-sm">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full -translate-y-48 translate-x-48 blur-3xl" />
-          
-          <CardHeader className="relative">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg">
-                <Sparkles className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div>
-                <CardTitle className="text-xl">Algoritmos Disponíveis</CardTitle>
+        <Card className="border-border bg-card/50 overflow-hidden">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <CardTitle className="text-xl font-semibold">Algoritmos</CardTitle>
                 <CardDescription>
                   {algorithmsLoading
-                    ? "Carregando algoritmos..."
+                    ? "Carregando..."
                     : algorithmsError
-                      ? "Erro ao conectar com a API"
-                      : `${algorithmsCount} algoritmos prontos para uso`
+                      ? "Erro de conexão"
+                      : `${algorithmsCount} algoritmos disponíveis`
                   }
                 </CardDescription>
               </div>
+              <Box className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
             </div>
           </CardHeader>
           
-          <CardContent className="relative">
+          <CardContent>
             {algorithmsLoading ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-muted/30 animate-pulse">
+                  <div key={i} className="p-5 rounded-xl border border-border bg-accent/30">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-lg bg-muted" />
+                      <div className="w-10 h-10 rounded-lg bg-muted animate-pulse" />
                       <div className="flex-1 space-y-2">
-                        <div className="h-4 w-24 rounded bg-muted" />
-                        <div className="h-3 w-16 rounded bg-muted" />
+                        <div className="h-4 w-24 rounded bg-muted animate-pulse" />
+                        <div className="h-3 w-16 rounded bg-muted animate-pulse" />
                       </div>
                     </div>
-                    <div className="h-3 w-full rounded bg-muted" />
+                    <div className="h-3 w-full rounded bg-muted animate-pulse" />
                   </div>
                 ))}
               </div>
             ) : algorithmsError ? (
-              <div className="text-center py-12">
-                <div className="relative inline-block">
-                  <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl" />
-                  <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-red-500/10 mx-auto mb-4">
-                    <XCircle className="h-10 w-10 text-red-500" />
-                  </div>
+              <div className="text-center py-16">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent border border-border mb-4">
+                  <XCircle className="h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-lg font-semibold mb-2 text-red-600 dark:text-red-400">
+                <h3 className="text-lg font-semibold mb-2">
                   Erro de Conexão
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  Não foi possível conectar com o backend
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Verifique se o servidor FastAPI está rodando na porta 8001
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+                  Não foi possível conectar com o backend. Verifique se o servidor está rodando na porta 8001.
                 </p>
               </div>
             ) : algorithms && algorithmsCount > 0 ? (
@@ -463,26 +385,25 @@ export default function Dashboard() {
                 {Object.values(algorithms).slice(0, 8).map((alg: any, index) => (
                   <motion.div
                     key={alg.type}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 + 0.3 }}
-                    whileHover={{ scale: 1.03, y: -2 }}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 + 0.2 }}
+                    whileHover={{ y: -4 }}
                     className="group cursor-pointer"
                   >
                     <div className={cn(
-                      "p-4 rounded-xl border border-border/50 transition-all duration-300",
-                      "bg-gradient-to-br from-muted/30 to-muted/10",
-                      "hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+                      "p-5 rounded-xl border border-border transition-all duration-300",
+                      "hover:border-foreground/20 hover:bg-accent/50 bg-background"
                     )}>
                       <div className="flex items-center gap-3 mb-3">
                         <span className="text-2xl group-hover:scale-110 transition-transform">
                           {alg.icon || "⚙️"}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-sm truncate group-hover:text-primary transition-colors">
+                          <h4 className="font-medium text-sm truncate">
                             {alg.name}
                           </h4>
-                          <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                          <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-mono">
                             {alg.type}
                           </p>
                         </div>
@@ -495,34 +416,15 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="relative inline-block">
-                  <div className="absolute inset-0 bg-muted/50 rounded-full blur-xl" />
-                  <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-muted mx-auto mb-4">
-                    <Cpu className="h-10 w-10 text-muted-foreground" />
-                  </div>
+              <div className="text-center py-16">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent border border-border mb-4">
+                  <Cpu className="h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Nenhum Algoritmo</h3>
-                <p className="text-muted-foreground">
-                  Os algoritmos serão carregados automaticamente quando disponíveis
+                <p className="text-sm text-muted-foreground">
+                  Os algoritmos serão carregados automaticamente
                 </p>
               </div>
-            )}
-            
-            {algorithmsCount > 8 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="mt-6 text-center"
-              >
-                <Link href="/algorithms">
-                  <Button variant="outline" className="rounded-full">
-                    Ver todos os {algorithmsCount} algoritmos
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </motion.div>
             )}
           </CardContent>
         </Card>

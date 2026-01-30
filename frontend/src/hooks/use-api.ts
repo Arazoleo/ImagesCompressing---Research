@@ -80,8 +80,14 @@ export function useProcessingHistory(limit = 50, offset = 0) {
 export function useProcessingResults(jobId: string | null, enabled = true) {
   return useQuery({
     queryKey: ["processing-results", jobId],
-    queryFn: () => apiClient.getProcessingResults(jobId!),
-    enabled: !!jobId && enabled,
+    queryFn: () => {
+      if (!jobId || typeof jobId !== 'string' || jobId.length === 0) {
+        throw new Error("Job ID inválido");
+      }
+      return apiClient.getProcessingResults(jobId);
+    },
+    enabled: !!jobId && enabled && typeof jobId === 'string' && jobId.length > 0,
+    retry: false,
   });
 }
 

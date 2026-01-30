@@ -148,7 +148,8 @@ class ProcessingService:
                             algorithm=algorithm_type,
                             status=ProcessingStatus.ERROR,
                             error_message=str(e),
-                            created_at=datetime.now().isoformat()
+                            created_at=datetime.now().isoformat(),
+                            job_id=job_id
                         )
                         job["results"].append(error_result.model_dump())
 
@@ -206,7 +207,8 @@ class ProcessingService:
                     result_url=result["output_url"],
                     metrics=ProcessingMetrics(**result["metrics"]),
                     processing_time=result["processing_time"],
-                    created_at=datetime.now().isoformat()
+                    created_at=datetime.now().isoformat(),
+                    job_id=job_id
                 )
                 logger.info(f"Algoritmo {algorithm_type} concluído com sucesso: PSNR={result['metrics']['psnr']:.2f}")
             else:
@@ -218,7 +220,8 @@ class ProcessingService:
                     status=ProcessingStatus.ERROR,
                     error_message=result.get("error", "Erro desconhecido"),
                     processing_time=result.get("processing_time", 0),
-                    created_at=datetime.now().isoformat()
+                    created_at=datetime.now().isoformat(),
+                    job_id=job_id
                 )
                 logger.error(f"Erro no algoritmo {algorithm_type}: {result.get('error', 'Erro desconhecido')}")
 
@@ -235,7 +238,8 @@ class ProcessingService:
                 status=ProcessingStatus.ERROR,
                 error_message=str(e),
                 processing_time=0,
-                created_at=datetime.now().isoformat()
+                created_at=datetime.now().isoformat(),
+                job_id=job_id
             )
 
             return processing_result.model_dump()
@@ -258,11 +262,15 @@ class ProcessingService:
 
     async def get_job_results(self, job_id: str) -> Optional[List[ProcessingResult]]:
         """Obter resultados de um job"""
+        logger.info(f"Buscando resultados do job: {job_id}")
         job = self.jobs.get(job_id)
         if not job:
+            logger.warning(f"Job {job_id} não encontrado. Jobs disponíveis: {list(self.jobs.keys())}")
             return None
 
-        return [ProcessingResult(**result) for result in job["results"]]
+        results = [ProcessingResult(**result) for result in job["results"]]
+        logger.info(f"Retornando {len(results)} resultados do job {job_id}")
+        return results
 
     async def cancel_job(self, job_id: str) -> bool:
         """Cancelar um job"""
@@ -279,9 +287,14 @@ class ProcessingService:
         all_results = []
 
         # Coletar resultados de todos os jobs
-        for job in self.jobs.values():
+        for job_id, job in self.jobs.items():
             if job["status"] == "completed":
-                all_results.extend(job["results"])
+                # Garantir que todos os resultados tenham job_id
+                for result in job["results"]:
+                    # Se o resultado não tiver job_id, adicionar o job_id do job
+                    if "job_id" not in result or not result["job_id"]:
+                        result["job_id"] = job_id
+                    all_results.append(result)
 
         # Ordenar por data (mais recente primeiro)
         all_results.sort(key=lambda x: x.get("created_at", ""), reverse=True)
@@ -290,6 +303,7 @@ class ProcessingService:
         start = offset
         end = offset + limit
 
+        logger.info(f"Retornando {len(all_results[start:end])} resultados do histórico (total: {len(all_results)})")
         return [ProcessingResult(**result) for result in all_results[start:end]]
 
     async def get_processing_stats(self) -> Dict[str, Any]:

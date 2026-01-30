@@ -44,7 +44,14 @@ app = FastAPI(
 # Configurar CORS para conectar com frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # URLs do frontend
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://frontend:3000",
+        "http://frontend-1:3000",
+        "http://imagescompressing---research-frontend-1:3000",
+        "*"  # Allow all origins for development
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

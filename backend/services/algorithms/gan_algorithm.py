@@ -12,7 +12,6 @@ import os
 from core.config import settings
 from core.logging import logger
 from services.image_service import build_full_url
-from services.algorithms.base_algorithm import AlgorithmBase
 
 
 class Generator(nn.Module):
@@ -124,11 +123,12 @@ class ResidualBlock(nn.Module):
         return x + residual
 
 
-class GANAlgorithm(AlgorithmBase):
+class GANAlgorithm:
     """Super-Resolution GAN Algorithm"""
 
     def __init__(self):
-        super().__init__("gan", "Super-Resolution usando Redes Generativas Adversariais")
+        self.name = "gan"
+        self.description = "Super-Resolution usando Redes Generativas Adversariais"
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.generator = None
         self.discriminator = None
@@ -171,7 +171,7 @@ class GANAlgorithm(AlgorithmBase):
 
         return numerator / denominator
 
-    async def process(self, image_path: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
+    def process_image(self, image_path: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
         start_time = time.time()
 
         try:

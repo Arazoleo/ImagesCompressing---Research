@@ -10,6 +10,7 @@ from typing import Dict, Any
 import time
 
 from core.config import settings
+from services.image_service import build_full_url
 
 class WaveletAlgorithm:
     """Algoritmo de compressão Wavelet usando Haar wavelet"""
@@ -50,7 +51,7 @@ class WaveletAlgorithm:
                 "success": True,
                 "algorithm": "wavelet",
                 "output_path": str(output_path),
-                "output_url": f"/processed/{output_filename}",
+                "output_url": build_full_url(f"/processed/{output_filename}"),
                 "metrics": {
                     "psnr": round(psnr, 2),
                     "ssim": 0.82,

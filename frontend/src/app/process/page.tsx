@@ -10,18 +10,18 @@ import { AlgorithmSelector } from "@/components/algorithms/algorithm-selector";
 import { ImageUpload } from "@/components/image/image-upload";
 import { ImageFile, AlgorithmType } from "@/lib/types";
 import { useProcessImages, useProcessingStatus, useProcessingWebSocket } from "@/hooks/use-api";
-import { Play, Image as ImageIcon, AlertTriangle, Cpu, Sparkles, Activity, Upload } from "lucide-react";
+import { Play, Image as ImageIcon, AlertTriangle, Cpu, Sparkles, Upload, Box } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 20 } },
 };
 
 export default function ProcessPage() {
@@ -56,22 +56,23 @@ export default function ProcessPage() {
   const isProcessing = processMutation.isPending || (jobStatus && jobStatus.status === 'running');
 
   return (
-    <motion.div className="flex-1 space-y-8 p-6 md:p-8" variants={containerVariants} initial="hidden" animate="visible">
-      <motion.div variants={itemVariants}>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Processar Imagens</h1>
-        <p className="text-muted-foreground mt-1">Configure e execute algoritmos de processamento</p>
+    <motion.div className="flex-1 space-y-8 p-6 md:p-10" variants={containerVariants} initial="hidden" animate="visible">
+      <motion.div variants={itemVariants} className="space-y-1">
+        <p className="text-caption">Processamento</p>
+        <h1 className="text-headline">Processar Imagens</h1>
+        <p className="text-muted-foreground">Configure e execute algoritmos de processamento</p>
       </motion.div>
 
       <AnimatePresence>
         {isProcessing && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-            <Card className="relative overflow-hidden border-border/50 bg-gradient-to-br from-blue-500/5 via-cyan-500/5 to-transparent">
+            <Card className="border-border bg-card/50">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-4">
-                    <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                    <div className="p-3 rounded-xl bg-foreground">
                       <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-                        <Cpu className="h-6 w-6 text-white" />
+                        <Cpu className="h-6 w-6 text-background" strokeWidth={1.5} />
                       </motion.div>
                     </div>
                     <div>
@@ -79,11 +80,11 @@ export default function ProcessPage() {
                       <p className="text-sm text-muted-foreground">{completedTasks} de {totalTasks} tarefas</p>
                     </div>
                   </div>
-                  <Badge className="bg-blue-500/10 text-blue-600 border-0 text-lg px-4 py-1">
+                  <Badge className="bg-foreground text-background border-0 text-lg px-4 py-1.5 rounded-lg font-mono">
                     {Math.round(progress)}%
                   </Badge>
                 </div>
-                <Progress value={progress} className="h-3" />
+                <Progress value={progress} className="h-2 bg-accent" />
               </CardContent>
             </Card>
           </motion.div>
@@ -93,18 +94,21 @@ export default function ProcessPage() {
       <AnimatePresence>
         {error && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-            <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertDescription>{error}</AlertDescription></Alert>
+            <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
+              <AlertTriangle className="h-4 w-4" strokeWidth={1.5} />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Image Upload Section */}
       <motion.div variants={itemVariants}>
-        <Card className="border-border/50 shadow-lg bg-card/50 backdrop-blur-sm">
+        <Card className="border-border bg-card/50">
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg">
-                <Upload className="h-5 w-5 text-white" />
+              <div className="p-2.5 rounded-xl bg-accent border border-border">
+                <Upload className="h-5 w-5" strokeWidth={1.5} />
               </div>
               <div>
                 <CardTitle>1. Carregar Imagens</CardTitle>
@@ -121,10 +125,17 @@ export default function ProcessPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <motion.div variants={itemVariants} className="lg:col-span-2">
           <div className="mb-6">
-            <Card className="border-border/50 shadow-lg bg-card/50 backdrop-blur-sm">
+            <Card className="border-border bg-card/50">
               <CardHeader>
-                <CardTitle>2. Selecionar Algoritmos</CardTitle>
-                <CardDescription>Escolha os algoritmos de processamento a serem aplicados</CardDescription>
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-accent border border-border">
+                    <Box className="h-5 w-5" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <CardTitle>2. Selecionar Algoritmos</CardTitle>
+                    <CardDescription>Escolha os algoritmos de processamento</CardDescription>
+                  </div>
+                </div>
               </CardHeader>
             </Card>
           </div>
@@ -132,55 +143,88 @@ export default function ProcessPage() {
         </motion.div>
 
         <motion.div variants={itemVariants} className="space-y-6">
-          <Card className="border-border/50 shadow-lg bg-card/50 backdrop-blur-sm">
+          <Card className="border-border bg-card/50">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center shadow-lg">
-                  <ImageIcon className="h-5 w-5 text-white" />
+                <div className="p-2.5 rounded-xl bg-accent border border-border">
+                  <ImageIcon className="h-5 w-5" strokeWidth={1.5} />
                 </div>
                 <CardTitle>Imagens Carregadas</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {uploadedImages.map((image, index) => (
-                  <motion.div key={image.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }} className="flex items-center gap-3 p-3 bg-muted/30 rounded-xl">
-                    <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center"><ImageIcon className="h-5 w-5 text-muted-foreground" /></div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{image.name}</p>
-                      <p className="text-xs text-muted-foreground">{image.width}×{image.height} px</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              {uploadedImages.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-sm text-muted-foreground">Nenhuma imagem carregada</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {uploadedImages.map((image, index) => (
+                    <motion.div 
+                      key={image.id} 
+                      initial={{ opacity: 0, x: -10 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      transition={{ delay: index * 0.1 }} 
+                      className="flex items-center gap-3 p-3 bg-accent/50 rounded-xl border border-border"
+                    >
+                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center border border-border">
+                        <ImageIcon className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{image.name}</p>
+                        <p className="text-xs text-muted-foreground font-mono">{image.width}×{image.height}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-lg bg-card/50 backdrop-blur-sm">
+          <Card className="border-border bg-card/50">
             <CardHeader>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
-                  <Sparkles className="h-5 w-5 text-primary-foreground" />
+                <div className="p-2.5 rounded-xl bg-foreground">
+                  <Sparkles className="h-5 w-5 text-background" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <CardTitle>3. Iniciar Processamento</CardTitle>
-                  <CardDescription>Execute os algoritmos selecionados nas imagens carregadas</CardDescription>
+                  <CardTitle>3. Iniciar</CardTitle>
+                  <CardDescription>Execute os algoritmos selecionados</CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-muted/30 rounded-xl">
-                  <div className="text-3xl font-bold text-primary">{selectedAlgorithms.length}</div>
-                  <div className="text-xs text-muted-foreground">Algoritmos</div>
+                <div className="text-center p-4 bg-accent/50 rounded-xl border border-border">
+                  <div className="text-3xl font-semibold">{selectedAlgorithms.length}</div>
+                  <div className="text-xs text-muted-foreground mt-1">Algoritmos</div>
                 </div>
-                <div className="text-center p-4 bg-muted/30 rounded-xl">
-                  <div className="text-3xl font-bold text-primary">{uploadedImages.length}</div>
-                  <div className="text-xs text-muted-foreground">Imagens</div>
+                <div className="text-center p-4 bg-accent/50 rounded-xl border border-border">
+                  <div className="text-3xl font-semibold">{uploadedImages.length}</div>
+                  <div className="text-xs text-muted-foreground mt-1">Imagens</div>
                 </div>
               </div>
-              <Button onClick={handleStartProcessing} disabled={selectedAlgorithms.length === 0 || uploadedImages.length === 0 || isProcessing} className="w-full h-12" size="lg">
-                {isProcessing ? <><Cpu className="h-5 w-5 mr-2 animate-spin" />Processando...</> : <><Play className="h-5 w-5 mr-2" />Iniciar Processamento</>}
+              <Button 
+                onClick={handleStartProcessing} 
+                disabled={selectedAlgorithms.length === 0 || uploadedImages.length === 0 || isProcessing} 
+                className={cn(
+                  "w-full h-12 rounded-xl transition-all duration-300",
+                  "bg-foreground text-background hover:bg-foreground/90",
+                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                )} 
+                size="lg"
+              >
+                {isProcessing ? (
+                  <>
+                    <Cpu className="h-5 w-5 mr-2 animate-spin" strokeWidth={1.5} />
+                    Processando...
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-5 w-5 mr-2" strokeWidth={1.5} />
+                    Iniciar Processamento
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>

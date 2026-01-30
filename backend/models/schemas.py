@@ -93,6 +93,7 @@ class ProcessingResult(BaseModel):
     processing_time: Optional[float] = Field(None, description="Tempo de processamento (segundos)")
     error_message: Optional[str] = Field(None, description="Mensagem de erro se houver")
     created_at: str = Field(..., description="Data/hora da criação")
+    job_id: Optional[str] = Field(None, description="ID do job de processamento")
 
 class BatchProcessingResponse(BaseModel):
     """Resposta do processamento em lote"""

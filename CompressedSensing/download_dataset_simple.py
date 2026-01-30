@@ -66,3 +66,5 @@ if __name__ == "__main__":
     print("- Usar suas proprias imagens: python prepare_dataset.py <pasta>")
 
 
+
+

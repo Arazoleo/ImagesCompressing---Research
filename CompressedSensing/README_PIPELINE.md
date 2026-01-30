@@ -82,3 +82,5 @@ python cs_pipeline.py img.jpg resultado.jpg 0.7
 ```
 
 
+
+

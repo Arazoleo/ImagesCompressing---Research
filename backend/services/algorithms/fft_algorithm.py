@@ -12,6 +12,7 @@ import time
 
 from core.config import settings
 from core.logging import logger
+from services.image_service import build_full_url
 
 class FFTAlgorithm:
     """Algoritmo de compressão FFT"""
@@ -94,7 +95,7 @@ class FFTAlgorithm:
                 "success": True,
                 "algorithm": "fft",
                 "output_path": str(output_path),
-                "output_url": f"/processed/{output_filename}",
+                "output_url": build_full_url(f"/processed/{output_filename}"),
                 "metrics": {
                     "psnr": round(psnr, 2),
                     "ssim": round(ssim, 3),

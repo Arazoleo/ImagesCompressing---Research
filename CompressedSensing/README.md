@@ -164,3 +164,5 @@ python cs_apply_model.py cs_refiner_model.pth teste_cs.jpg teste_final.jpg
 - [ ] Documentar resultados no relatório
 
 
+
+

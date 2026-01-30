@@ -4,6 +4,7 @@ import torch.optim as optim
 from torchvision import transforms
 from PIL import Image
 import numpy as np
+import cv2
 from pathlib import Path
 import time
 from typing import Dict, Any
